@@ -1,16 +1,14 @@
 import os
 from openai import OpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-MODEL_NAME = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
-
 
 def get_client():
-    return client
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    if not api_key:
+        raise ValueError("No se encontró OPENAI_API_KEY en variables de entorno")
+
+    return OpenAI(api_key=api_key)
 
 
 def get_model_name():
-    return MODEL_NAME
+    return os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
