@@ -118,65 +118,113 @@ def clear_form():
     }
 
 
-# ---------- CSS ----------
+TOPICS = [
+    "Ansiedad",
+    "Autoestima",
+    "Duelo",
+    "Vínculos",
+    "Vacío emocional",
+    "Trauma",
+    "Autoexigencia",
+    "Herida emocional",
+    "Apego",
+    "Regulación emocional",
+    "Identidad",
+    "Propósito",
+    "Espiritualidad",
+    "Crecimiento personal",
+    "Psicodélicos terapéuticos",
+    "Otro",
+]
+
+OBJECTIVES = [
+    "Educar",
+    "Generar identificación",
+    "Provocar reflexión",
+    "Aumentar guardados",
+    "Aumentar compartidos",
+]
+
+TONES = [
+    "Suave",
+    "Profundo",
+    "Directo",
+    "Íntimo",
+    "Esperanzador",
+    "Espiritual",
+    "Contenedor",
+]
+
+DURATIONS = [
+    "1300–1500 caracteres",
+    "1000–1300 caracteres",
+    "1500–1800 caracteres",
+]
+
+HOOK_LEVELS = [
+    "Baja",
+    "Media",
+    "Alta",
+]
+
+# ---------- CSS MOBILE SAFE ----------
 st.markdown("""
 <style>
 .block-container {
-    max-width: 760px;
-    padding-top: 2.8rem !important;
-    padding-bottom: 2.2rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    max-width: 780px;
+    padding-top: 1.8rem !important;
+    padding-bottom: 2rem;
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
 }
 
 .stApp {
-    background:
-        radial-gradient(circle at top left, rgba(236, 233, 255, 0.9), transparent 30%),
-        linear-gradient(180deg, #f8fafc 0%, #f5f7fb 100%);
+    background: linear-gradient(180deg, #f8fafc 0%, #f3f4f6 100%);
 }
 
+/* Header */
 .hero {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 24px;
-    padding: 20px 18px 18px 18px;
+    padding: 20px 18px;
     margin-bottom: 18px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
 }
 
 .main-title {
-    font-size: 1.95rem;
+    font-size: 1.9rem;
     font-weight: 800;
-    line-height: 1.12;
+    line-height: 1.1;
     margin: 0 0 0.35rem 0;
     color: #0f172a;
     letter-spacing: -0.02em;
 }
 
 .subtitle {
-    font-size: 0.96rem;
+    font-size: 1rem;
     color: #64748b;
-    margin: 0;
     line-height: 1.45;
+    margin: 0;
 }
 
+/* Cards */
 .card {
-    background: rgba(255,255,255,0.96);
+    background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 22px;
+    border-radius: 20px;
     padding: 16px;
     margin-bottom: 16px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
 }
 
 .soft-card {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    border: 1px solid #edf2f7;
-    border-radius: 16px;
-    padding: 13px 14px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 12px 14px;
     margin-bottom: 10px;
-    line-height: 1.45;
+    line-height: 1.5;
     color: #111827;
 }
 
@@ -188,17 +236,16 @@ st.markdown("""
 }
 
 .metric-card {
-    background: rgba(255,255,255,0.96);
+    background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 16px;
+    border-radius: 14px;
     padding: 12px 14px;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .metric-label {
     font-size: 0.75rem;
     color: #64748b;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .metric-value {
@@ -220,71 +267,94 @@ st.markdown("""
     color: #1e3a8a;
     border: 1px solid #c7d2fe;
     border-radius: 999px;
-    padding: 7px 11px;
-    font-size: 0.9rem;
+    padding: 8px 12px;
+    font-size: 0.92rem;
     font-weight: 600;
 }
 
-textarea {
-    font-size: 16px !important;
-    line-height: 1.55 !important;
-    border-radius: 16px !important;
+/* Labels */
+label, .stSelectbox label, .stTextArea label {
+    font-weight: 700 !important;
+    color: #111827 !important;
+    font-size: 1rem !important;
 }
 
+/* TEXTAREA - CRÍTICO */
 .stTextArea textarea {
-    background: #fcfdff !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    caret-color: #111827 !important;
+    opacity: 1 !important;
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    border-radius: 16px !important;
+    border: 1px solid #d1d5db !important;
+    padding: 14px !important;
 }
 
+.stTextArea textarea::placeholder {
+    color: #9ca3af !important;
+    -webkit-text-fill-color: #9ca3af !important;
+    opacity: 1 !important;
+    font-size: 18px !important;
+}
+
+/* Selects */
 .stSelectbox div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    color: #111827 !important;
     border-radius: 14px !important;
-    min-height: 48px !important;
+    min-height: 50px !important;
+    border: 1px solid #d1d5db !important;
 }
 
+/* Buttons */
 .stDownloadButton button,
 .stButton button,
 .stFormSubmitButton button {
     border-radius: 14px !important;
     min-height: 48px !important;
     font-weight: 700 !important;
-    border: 1px solid #dbe4f0 !important;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+    font-size: 1rem !important;
+    border: 1px solid #d1d5db !important;
+    box-shadow: none !important;
 }
 
-.primary-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+.stFormSubmitButton button[kind="primary"] {
+    background: #111827 !important;
+    color: white !important;
 }
 
-label, .stSelectbox label, .stTextArea label {
-    font-weight: 650 !important;
-    color: #0f172a !important;
-}
-
+/* Alerts */
 [data-testid="stAlert"] {
     border-radius: 16px;
 }
 
+/* Code blocks */
+pre, code {
+    font-size: 0.95rem !important;
+}
+
+/* Mobile */
 @media (max-width: 640px) {
     .block-container {
-        padding-top: 2.2rem !important;
-        padding-left: 0.9rem;
-        padding-right: 0.9rem;
+        padding-top: 1.1rem !important;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
     }
 
     .hero {
-        padding: 18px 16px 16px 16px;
+        padding: 18px 16px;
         border-radius: 20px;
-        margin-bottom: 16px;
     }
 
     .main-title {
-        font-size: 1.7rem;
+        font-size: 1.65rem;
     }
 
     .subtitle {
-        font-size: 0.92rem;
+        font-size: 0.95rem;
     }
 
     .card {
@@ -294,16 +364,19 @@ label, .stSelectbox label, .stTextArea label {
 
     .soft-card {
         padding: 12px;
-        border-radius: 14px;
-    }
-
-    .metric-wrap {
-        gap: 8px;
     }
 
     .metric-card {
         padding: 10px 12px;
-        border-radius: 14px;
+    }
+
+    .stTextArea textarea {
+        font-size: 18px !important;
+        line-height: 1.65 !important;
+    }
+
+    .stTextArea textarea::placeholder {
+        font-size: 18px !important;
     }
 }
 </style>
@@ -320,6 +393,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------- FORM ----------
+st.markdown('<div class="card">', unsafe_allow_html=True)
+
 with st.form("reel_form"):
     script = st.text_area(
         "Guion base",
@@ -330,110 +405,32 @@ with st.form("reel_form"):
 
     topic = st.selectbox(
         "Tema principal",
-        [
-            "Ansiedad",
-            "Autoestima",
-            "Duelo",
-            "Vínculos",
-            "Vacío emocional",
-            "Trauma",
-            "Autoexigencia",
-            "Herida emocional",
-            "Apego",
-            "Regulación emocional",
-            "Identidad",
-            "Propósito",
-            "Espiritualidad",
-            "Crecimiento personal",
-            "Psicodélicos terapéuticos",
-            "Otro",
-        ],
-        index=[
-            "Ansiedad",
-            "Autoestima",
-            "Duelo",
-            "Vínculos",
-            "Vacío emocional",
-            "Trauma",
-            "Autoexigencia",
-            "Herida emocional",
-            "Apego",
-            "Regulación emocional",
-            "Identidad",
-            "Propósito",
-            "Espiritualidad",
-            "Crecimiento personal",
-            "Psicodélicos terapéuticos",
-            "Otro",
-        ].index(st.session_state.form_data["topic"]),
+        TOPICS,
+        index=TOPICS.index(st.session_state.form_data["topic"]),
     )
 
     objective = st.selectbox(
         "Objetivo del reel",
-        [
-            "Educar",
-            "Generar identificación",
-            "Provocar reflexión",
-            "Aumentar guardados",
-            "Aumentar compartidos",
-        ],
-        index=[
-            "Educar",
-            "Generar identificación",
-            "Provocar reflexión",
-            "Aumentar guardados",
-            "Aumentar compartidos",
-        ].index(st.session_state.form_data["objective"]),
+        OBJECTIVES,
+        index=OBJECTIVES.index(st.session_state.form_data["objective"]),
     )
 
     emotional_tone = st.selectbox(
         "Tono emocional",
-        [
-            "Suave",
-            "Profundo",
-            "Directo",
-            "Íntimo",
-            "Esperanzador",
-            "Espiritual",
-            "Contenedor",
-        ],
-        index=[
-            "Suave",
-            "Profundo",
-            "Directo",
-            "Íntimo",
-            "Esperanzador",
-            "Espiritual",
-            "Contenedor",
-        ].index(st.session_state.form_data["emotional_tone"]),
+        TONES,
+        index=TONES.index(st.session_state.form_data["emotional_tone"]),
     )
 
     duration = st.selectbox(
         "Duración deseada",
-        [
-            "1300–1500 caracteres",
-            "1000–1300 caracteres",
-            "1500–1800 caracteres",
-        ],
-        index=[
-            "1300–1500 caracteres",
-            "1000–1300 caracteres",
-            "1500–1800 caracteres",
-        ].index(st.session_state.form_data["duration"]),
+        DURATIONS,
+        index=DURATIONS.index(st.session_state.form_data["duration"]),
     )
 
     hook_intensity = st.selectbox(
         "Intensidad del hook",
-        [
-            "Baja",
-            "Media",
-            "Alta",
-        ],
-        index=[
-            "Baja",
-            "Media",
-            "Alta",
-        ].index(st.session_state.form_data["hook_intensity"]),
+        HOOK_LEVELS,
+        index=HOOK_LEVELS.index(st.session_state.form_data["hook_intensity"]),
     )
 
     c1, c2 = st.columns(2)
@@ -441,6 +438,8 @@ with st.form("reel_form"):
         submitted = st.form_submit_button("Generar optimización", use_container_width=True)
     with c2:
         clear_clicked = st.form_submit_button("Limpiar formulario", use_container_width=True)
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 if clear_clicked:
     clear_form()
@@ -476,7 +475,7 @@ if submitted:
             st.error(f"Ocurrió un error: {e}")
             st.stop()
 
-# ---------- RENDER STORED RESULT ----------
+# ---------- RENDER RESULT ----------
 if st.session_state.result is not None:
     result = st.session_state.result
     topic = st.session_state.form_data["topic"]
@@ -493,12 +492,6 @@ if st.session_state.result is not None:
         duration=duration,
         hook_intensity=hook_intensity,
     )
-
-    st.markdown("""
-    <script>
-    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
-    </script>
-    """, unsafe_allow_html=True)
 
     st.markdown("## Resumen")
     st.markdown(
