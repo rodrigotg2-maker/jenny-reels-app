@@ -7,6 +7,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# ---------- STATE ----------
+if "result" not in st.session_state:
+    st.session_state.result = None
+
+if "form_data" not in st.session_state:
+    st.session_state.form_data = {
+        "script": "",
+        "topic": "Ansiedad",
+        "objective": "Educar",
+        "emotional_tone": "Suave",
+        "duration": "1300–1500 caracteres",
+        "hook_intensity": "Media",
+    }
+
 # ---------- HELPERS ----------
 def build_export_text(result, topic, objective, emotional_tone, duration, hook_intensity):
     parts = [
@@ -84,6 +98,24 @@ def render_list_card(title, items):
     else:
         st.markdown('<div class="soft-card">Sin contenido.</div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
+
+def render_copy_code(label, content, language="markdown"):
+    st.markdown(f"**{label}**")
+    st.code(content, language=language)
+    st.caption("Usa el ícono de copiar en la esquina superior derecha del bloque.")
+
+
+def clear_form():
+    st.session_state.result = None
+    st.session_state.form_data = {
+        "script": "",
+        "topic": "Ansiedad",
+        "objective": "Educar",
+        "emotional_tone": "Suave",
+        "duration": "1300–1500 caracteres",
+        "hook_intensity": "Media",
+    }
 
 
 # ---------- CSS ----------
@@ -218,9 +250,11 @@ textarea {
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
 }
 
-.stFormSubmitButton button {
-    background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
-    color: white !important;
+.primary-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 label, .stSelectbox label, .stTextArea label {
@@ -291,6 +325,7 @@ with st.form("reel_form"):
         "Guion base",
         height=220,
         placeholder="Pega aquí el guion base...",
+        value=st.session_state.form_data["script"],
     )
 
     topic = st.selectbox(
@@ -313,6 +348,24 @@ with st.form("reel_form"):
             "Psicodélicos terapéuticos",
             "Otro",
         ],
+        index=[
+            "Ansiedad",
+            "Autoestima",
+            "Duelo",
+            "Vínculos",
+            "Vacío emocional",
+            "Trauma",
+            "Autoexigencia",
+            "Herida emocional",
+            "Apego",
+            "Regulación emocional",
+            "Identidad",
+            "Propósito",
+            "Espiritualidad",
+            "Crecimiento personal",
+            "Psicodélicos terapéuticos",
+            "Otro",
+        ].index(st.session_state.form_data["topic"]),
     )
 
     objective = st.selectbox(
@@ -324,6 +377,13 @@ with st.form("reel_form"):
             "Aumentar guardados",
             "Aumentar compartidos",
         ],
+        index=[
+            "Educar",
+            "Generar identificación",
+            "Provocar reflexión",
+            "Aumentar guardados",
+            "Aumentar compartidos",
+        ].index(st.session_state.form_data["objective"]),
     )
 
     emotional_tone = st.selectbox(
@@ -337,6 +397,15 @@ with st.form("reel_form"):
             "Espiritual",
             "Contenedor",
         ],
+        index=[
+            "Suave",
+            "Profundo",
+            "Directo",
+            "Íntimo",
+            "Esperanzador",
+            "Espiritual",
+            "Contenedor",
+        ].index(st.session_state.form_data["emotional_tone"]),
     )
 
     duration = st.selectbox(
@@ -346,7 +415,11 @@ with st.form("reel_form"):
             "1000–1300 caracteres",
             "1500–1800 caracteres",
         ],
-        index=0,
+        index=[
+            "1300–1500 caracteres",
+            "1000–1300 caracteres",
+            "1500–1800 caracteres",
+        ].index(st.session_state.form_data["duration"]),
     )
 
     hook_intensity = st.selectbox(
@@ -356,154 +429,179 @@ with st.form("reel_form"):
             "Media",
             "Alta",
         ],
-        index=1,
+        index=[
+            "Baja",
+            "Media",
+            "Alta",
+        ].index(st.session_state.form_data["hook_intensity"]),
     )
 
-    submitted = st.form_submit_button("Generar optimización", use_container_width=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        submitted = st.form_submit_button("Generar optimización", use_container_width=True)
+    with c2:
+        clear_clicked = st.form_submit_button("Limpiar formulario", use_container_width=True)
+
+if clear_clicked:
+    clear_form()
+    st.rerun()
 
 # ---------- RESULTS ----------
 if submitted:
     if not script.strip():
-        st.error("Debes pegar un guion base.")
+        st.warning("Pega un guion para continuar.")
+        st.stop()
+
+    st.session_state.form_data = {
+        "script": script,
+        "topic": topic,
+        "objective": objective,
+        "emotional_tone": emotional_tone,
+        "duration": duration,
+        "hook_intensity": hook_intensity,
+    }
+
+    with st.spinner("Optimizando guion... esto puede tardar unos segundos."):
+        try:
+            result = generate_reel_output(
+                script=script,
+                topic=topic,
+                objective=objective,
+                emotional_tone=emotional_tone,
+                duration=duration,
+                hook_intensity=hook_intensity,
+            )
+            st.session_state.result = result
+        except Exception as e:
+            st.error(f"Ocurrió un error: {e}")
+            st.stop()
+
+# ---------- RENDER STORED RESULT ----------
+if st.session_state.result is not None:
+    result = st.session_state.result
+    topic = st.session_state.form_data["topic"]
+    objective = st.session_state.form_data["objective"]
+    emotional_tone = st.session_state.form_data["emotional_tone"]
+    duration = st.session_state.form_data["duration"]
+    hook_intensity = st.session_state.form_data["hook_intensity"]
+
+    export_text = build_export_text(
+        result=result,
+        topic=topic,
+        objective=objective,
+        emotional_tone=emotional_tone,
+        duration=duration,
+        hook_intensity=hook_intensity,
+    )
+
+    st.markdown("""
+    <script>
+    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+    </script>
+    """, unsafe_allow_html=True)
+
+    st.markdown("## Resumen")
+    st.markdown(
+        f"""
+        <div class="metric-wrap">
+            <div class="metric-card">
+                <div class="metric-label">Tema</div>
+                <div class="metric-value">{topic}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Objetivo</div>
+                <div class="metric-value">{objective}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Tono</div>
+                <div class="metric-value">{emotional_tone}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Duración</div>
+                <div class="metric-value">{duration}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Hook</div>
+                <div class="metric-value">{hook_intensity}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Caracteres</div>
+                <div class="metric-value">{len(result.guion_final_optimizado)}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.download_button(
+        label="Descargar resultado (.txt)",
+        data=export_text,
+        file_name="jenny_reels_resultado.txt",
+        mime="text/plain",
+        use_container_width=True,
+    )
+
+    st.markdown("## Guion final optimizado")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.text_area(
+        "Listo para copiar y pegar",
+        value=result.guion_final_optimizado,
+        height=380,
+        key="guion_final_mobile",
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
+    render_copy_code("Copiar guion final", result.guion_final_optimizado)
+
+    render_list_card("5 títulos sugeridos", result.titulos_sugeridos)
+    render_copy_code(
+        "Copiar títulos",
+        "\n".join([f"{i}. {t}" for i, t in enumerate(result.titulos_sugeridos, 1)])
+    )
+
+    render_list_card("Top 5 hooks mejorados", result.hooks_mejorados)
+    render_copy_code(
+        "Copiar hooks",
+        "\n".join([f"{i}. {h}" for i, h in enumerate(result.hooks_mejorados, 1)])
+    )
+
+    st.markdown("## 5 hashtags")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    if result.hashtags:
+        chips = "".join([f'<span class="hashtag-chip">{tag}</span>' for tag in result.hashtags])
+        st.markdown(f'<div class="hashtag-chip-wrap">{chips}</div>', unsafe_allow_html=True)
     else:
-        with st.spinner("Optimizando guion..."):
-            try:
-                result = generate_reel_output(
-                    script=script,
-                    topic=topic,
-                    objective=objective,
-                    emotional_tone=emotional_tone,
-                    duration=duration,
-                    hook_intensity=hook_intensity,
-                )
+        st.markdown('<div class="soft-card">No se generaron hashtags.</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+    render_copy_code("Copiar hashtags", " ".join(result.hashtags))
 
-                export_text = build_export_text(
-                    result=result,
-                    topic=topic,
-                    objective=objective,
-                    emotional_tone=emotional_tone,
-                    duration=duration,
-                    hook_intensity=hook_intensity,
-                )
+    render_list_card("3 frases de cierre", result.frases_cierre)
+    render_copy_code(
+        "Copiar frases de cierre",
+        "\n".join([f"{i}. {f}" for i, f in enumerate(result.frases_cierre, 1)])
+    )
 
-                st.markdown("## Resumen")
-                st.markdown(
-                    f"""
-                    <div class="metric-wrap">
-                        <div class="metric-card">
-                            <div class="metric-label">Tema</div>
-                            <div class="metric-value">{topic}</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Objetivo</div>
-                            <div class="metric-value">{objective}</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Tono</div>
-                            <div class="metric-value">{emotional_tone}</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Duración</div>
-                            <div class="metric-value">{duration}</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Hook</div>
-                            <div class="metric-value">{hook_intensity}</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Caracteres</div>
-                            <div class="metric-value">{len(result.guion_final_optimizado)}</div>
-                        </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+    st.markdown("## Diagnóstico")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown("**Qué funciona**")
+    if result.diagnostico.funciona:
+        for item in result.diagnostico.funciona:
+            st.markdown(f"- {item}")
+    else:
+        st.markdown("- Sin observaciones.")
 
-                st.download_button(
-                    label="Descargar resultado (.txt)",
-                    data=export_text,
-                    file_name="jenny_reels_resultado.txt",
-                    mime="text/plain",
-                    use_container_width=True,
-                )
+    st.markdown("")
+    st.markdown("**Qué está frenando el reel**")
+    if result.diagnostico.frena:
+        for item in result.diagnostico.frena:
+            st.markdown(f"- {item}")
+    else:
+        st.markdown("- Sin observaciones.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-                st.markdown("## Guion final optimizado")
-                st.markdown('<div class="card">', unsafe_allow_html=True)
-                st.text_area(
-                    "Listo para copiar y pegar",
-                    value=result.guion_final_optimizado,
-                    height=380,
-                    key="guion_final_mobile",
-                )
-                st.markdown("</div>", unsafe_allow_html=True)
-
-                render_list_card("5 títulos sugeridos", result.titulos_sugeridos)
-                st.text_area(
-                    "Copiar títulos",
-                    value="\n".join([f"{i}. {t}" for i, t in enumerate(result.titulos_sugeridos, 1)]),
-                    height=150,
-                    key="copy_titles_mobile",
-                )
-
-                render_list_card("Top 5 hooks mejorados", result.hooks_mejorados)
-                st.text_area(
-                    "Copiar hooks",
-                    value="\n".join([f"{i}. {h}" for i, h in enumerate(result.hooks_mejorados, 1)]),
-                    height=150,
-                    key="copy_hooks_mobile",
-                )
-
-                st.markdown("## 5 hashtags")
-                st.markdown('<div class="card">', unsafe_allow_html=True)
-                if result.hashtags:
-                    chips = "".join([f'<span class="hashtag-chip">{tag}</span>' for tag in result.hashtags])
-                    st.markdown(f'<div class="hashtag-chip-wrap">{chips}</div>', unsafe_allow_html=True)
-                else:
-                    st.markdown('<div class="soft-card">No se generaron hashtags.</div>', unsafe_allow_html=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-
-                st.text_area(
-                    "Copiar hashtags",
-                    value=" ".join(result.hashtags),
-                    height=90,
-                    key="copy_hashtags_mobile",
-                )
-
-                render_list_card("3 frases de cierre", result.frases_cierre)
-                st.text_area(
-                    "Copiar frases de cierre",
-                    value="\n".join([f"{i}. {f}" for i, f in enumerate(result.frases_cierre, 1)]),
-                    height=120,
-                    key="copy_closings_mobile",
-                )
-
-                st.markdown("## Diagnóstico")
-                st.markdown('<div class="card">', unsafe_allow_html=True)
-                st.markdown("**Qué funciona**")
-                if result.diagnostico.funciona:
-                    for item in result.diagnostico.funciona:
-                        st.markdown(f"- {item}")
-                else:
-                    st.markdown("- Sin observaciones.")
-
-                st.markdown("")
-                st.markdown("**Qué está frenando el reel**")
-                if result.diagnostico.frena:
-                    for item in result.diagnostico.frena:
-                        st.markdown(f"- {item}")
-                else:
-                    st.markdown("- Sin observaciones.")
-                st.markdown("</div>", unsafe_allow_html=True)
-
-                st.text_area(
-                    "Copiar diagnóstico",
-                    value="Qué funciona:\n"
-                    + "\n".join([f"- {x}" for x in result.diagnostico.funciona])
-                    + "\n\nQué está frenando el reel:\n"
-                    + "\n".join([f"- {x}" for x in result.diagnostico.frena]),
-                    height=180,
-                    key="copy_diagnosis_mobile",
-                )
-
-            except Exception as e:
-                st.error(f"Ocurrió un error: {e}")
+    render_copy_code(
+        "Copiar diagnóstico",
+        "Qué funciona:\n"
+        + "\n".join([f"- {x}" for x in result.diagnostico.funciona])
+        + "\n\nQué está frenando el reel:\n"
+        + "\n".join([f"- {x}" for x in result.diagnostico.frena])
+    )
