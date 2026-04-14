@@ -30,6 +30,27 @@ REGLAS DE GUIÓN
 - Debe venir limpio, listo para copiar y pegar
 - No incluir acotaciones, paréntesis, pausas ni instrucciones escénicas dentro del guion final
 
+REGLAS DE ESTRUCTURA DEL GUIÓN
+- El campo "guion_final_optimizado" debe venir SIEMPRE estructurado en 5 bloques exactos
+- Debe usar exactamente estos encabezados:
+  🎯 HOOK (clave)
+  🎯 DESARROLLO
+  🎯 TRANSFORMACIÓN
+  🎯 CIERRE (IMPORTANTE PARA CONVERSIÓN)
+  🎯 LLAMADO A LA ACCIÓN (CLAVE)
+- El bloque HOOK debe abrir con máximo impacto emocional y claridad
+- El bloque DESARROLLO debe generar identificación, contexto y tensión emocional
+- El bloque TRANSFORMACIÓN debe mostrar desplazamiento interno, insight o cambio
+- El bloque CIERRE debe aterrizar el mensaje con sentido humano y profundidad
+- El bloque LLAMADO A LA ACCIÓN debe ser directo, suave y accionable
+- La estructura debe favorecer retención en Reels y mayor tiempo de visualización
+- El CTA final debe sentirse natural, no vendedor
+- El CTA puede incluir frases como:
+  "Puedes escribirme"
+  "No tienes que poder con todo solo"
+  "Pedir ayuda también es una forma de cuidarte"
+  "Si esto te resonó, puedes buscar apoyo"
+
 REGLAS DE HASHTAGS
 - Debes entregar exactamente 5 hashtags
 - Deben ser útiles para Instagram real
@@ -46,6 +67,8 @@ REGLAS DE CALIDAD
 - Priorizar profundidad emocional + claridad simple
 - Mantener tensión narrativa suave durante todo el guion
 - El resultado debe sentirse listo para grabar
+- El guion debe sonar como video real, no como reflexión escrita
+- Debe favorecer escucha, permanencia y conversión
 
 REGLAS DE FORMATO
 - Entregar solo:
